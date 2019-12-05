@@ -1,4 +1,5 @@
 const data = {};
+let running = false;
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
@@ -70,17 +71,20 @@ function listener(details){
 }
 
 browser.runtime.onMessage.addListener(message => {
-    if(message.msg === 'start'){
+//browser.browserAction.onClicked.addListener(() => {
+    console.log(message);
+    if(!running){
         browser.webRequest.onBeforeRequest.addListener(
           listener,
           {urls: ["*://*.tiktok.com/share*"]},
           ["blocking"]
         );
     }
-    else if(message.msg === 'end'){
+    else{
         browser.webRequest.onBeforeRequest.removeListener(listener);
         saveToFile();
     }
+    running = !running;
 });
 
 browser.webRequest.onBeforeRequest.addListener(
