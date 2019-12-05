@@ -1,13 +1,13 @@
-const map = {};
+const data = {};
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
     browser.tabs.query({url: "*://*.tiktok.com/*"})
-        .then(tabs => 
-                tabs.forEach(tab => 
-                    browser.tabs.sendMessage(tab.id, {msg})
-                    )
-             );
+      .then(tabs =>
+        tabs.forEach(tab =>
+          browser.tabs.sendMessage(tab.id, {msg})
+        )
+      );
 }
 
 function listener(details){
@@ -18,38 +18,30 @@ function listener(details){
 
     filter.ondata = event => {
         const str = decoder.decode(event.data, {stream: true});
-        //console.log(str);
         data += str;
-        //let data = JSON.parse(str);
-        //console.log(data);
 
         filter.write(encoder.encode(str));
-    }
+    };
 
-    filter.onstop = event => {
+    filter.onstop = () => {
         filter.disconnect();
         const obj = JSON.parse(data);
-        //console.log(obj.body);
 
         //don't send it immediately because it may still be loading
         if(obj.body.hasMore)
             setTimeout(() => sendMessageToTab('scroll'), 500);
 
-
         const items = obj.body.itemListData;
         const user = items[0].authorInfos.uniqueId;
 
-        if(!map[user])
-            map[user] = {};
+        if(!data[user])
+            data[user] = {};
 
-        //each of these items has a itemInfos object that has
-        //comment 
-        //also has a authorInfos.uniqueId (ex. qzim) to be safe
         items.forEach(item => {
             const {text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
             const {musicId, musicName} = item.musicInfos;
-            const obj = {
-                text, 
+            data[user][id] = {
+                text,
                 time: createTime,
                 likes: diggCount,
                 shares: shareCount,
@@ -59,24 +51,24 @@ function listener(details){
                 musicName,
                 musicurl: item.musicInfos.playUrl[0]
             };
-            map[user][id] = obj;
         });
+
         if(!(obj.body.hasMore)){
-            const blob = new Blob([JSON.stringify(map)]);
+            const blob = new Blob([JSON.stringify(data)]);
             browser.downloads.download({
                 url: URL.createObjectURL(blob),
                 saveAs: true,
                 filename: 'tiktok-data.json'
             });
         }
-    }
+    };
 
     return {};
 }
 
 browser.webRequest.onBeforeRequest.addListener(
-        listener,
-        {urls: ["*://*.tiktok.com/share*"]},
-        ["blocking"]
-        );
+  listener,
+  {urls: ["*://*.tiktok.com/share*"]},
+  ["blocking"]
+);
 
