@@ -1,16 +1,25 @@
+let map = {};
+
 function listener(details) {
   let filter = browser.webRequest.filterResponseData(details.requestId);
   let decoder = new TextDecoder("utf-8");
   let encoder = new TextEncoder();
+  let data = "";
 
   filter.ondata = event => {
     let str = decoder.decode(event.data, {stream: true});
-    // Just change any instance of Example in the HTTP response
-    // to WebExtension Example.
-    str = str.replace(/samuploads/g, 'It works');
-    console.log('fuck');
+    //console.log(str);
+    data += str;
+    //let data = JSON.parse(str);
+    //console.log(data);
+    
     filter.write(encoder.encode(str));
+  }
+
+  filter.onstop = event => {
     filter.disconnect();
+    let obj = JSON.parse(data);
+    console.log(obj);
   }
 
   return {};
@@ -18,7 +27,7 @@ function listener(details) {
 
 browser.webRequest.onBeforeRequest.addListener(
   listener,
-  {urls: ["*://*.tiktok.com/*"]},
+  {urls: ["*://*.tiktok.com/share*"]},
   ["blocking"]
 );
 

@@ -12,6 +12,13 @@
     "webRequest", "webRequestBlocking", "*://*.tiktok.com/*"
   ],
 
+  "content_scripts": [
+    {
+      "matches": ["*://*.tiktok.com/@*"],
+      "js": ["scroll.js"]
+    }
+  ],
+
   "background": {
     "scripts": ["background.js"]
   },
