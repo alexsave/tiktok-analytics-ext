@@ -1,13 +1,13 @@
-let map = {};
+const map = {};
 
-function listener(details) {
-  let filter = browser.webRequest.filterResponseData(details.requestId);
-  let decoder = new TextDecoder("utf-8");
-  let encoder = new TextEncoder();
+function listener(details){
+  const filter = browser.webRequest.filterResponseData(details.requestId);
+  const decoder = new TextDecoder("utf-8");
+  const encoder = new TextEncoder();
   let data = "";
 
   filter.ondata = event => {
-    let str = decoder.decode(event.data, {stream: true});
+    const str = decoder.decode(event.data, {stream: true});
     //console.log(str);
     data += str;
     //let data = JSON.parse(str);
@@ -18,7 +18,7 @@ function listener(details) {
 
   filter.onstop = event => {
     filter.disconnect();
-    let obj = JSON.parse(data);
+    const obj = JSON.parse(data);
     //console.log(obj.body);
     
     const items = obj.body.itemListData;
