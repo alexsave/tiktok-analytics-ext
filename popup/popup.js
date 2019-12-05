@@ -1,5 +1,6 @@
 function sendMessage(){
   browser.runtime.sendMessage({username: input.value});
+  window.close();
 }
 
 const input = document.querySelector('input');
