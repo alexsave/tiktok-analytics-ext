@@ -10,6 +10,15 @@ function sendMessageToTab(msg){
       );
 }
 
+function saveToFile(){
+    const blob = new Blob([JSON.stringify(data)]);
+    browser.downloads.download({
+        url: URL.createObjectURL(blob),
+        saveAs: true,
+        filename: 'tiktok-data.json'
+    });
+}
+
 function listener(details){
     const filter = browser.webRequest.filterResponseData(details.requestId);
     const decoder = new TextDecoder("utf-8");
@@ -38,7 +47,7 @@ function listener(details){
             data[user] = {};
 
         items.forEach(item => {
-            const {text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
+            const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
             const {musicId, musicName} = item.musicInfos;
             data[user][id] = {
                 text,
@@ -53,18 +62,26 @@ function listener(details){
             };
         });
 
-        if(!(obj.body.hasMore)){
-            const blob = new Blob([JSON.stringify(data)]);
-            browser.downloads.download({
-                url: URL.createObjectURL(blob),
-                saveAs: true,
-                filename: 'tiktok-data.json'
-            });
-        }
+        if(!(obj.body.hasMore))
+            saveToFile();
     };
 
     return {};
 }
+
+browser.runtime.onMessage.addListener(message => {
+    if(message.msg === 'start'){
+        browser.webRequest.onBeforeRequest.addListener(
+          listener,
+          {urls: ["*://*.tiktok.com/share*"]},
+          ["blocking"]
+        );
+    }
+    else if(message.msg === 'end'){
+        browser.webRequest.onBeforeRequest.removeListener(listener);
+        saveToFile();
+    }
+});
 
 browser.webRequest.onBeforeRequest.addListener(
   listener,
