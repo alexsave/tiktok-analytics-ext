@@ -47,6 +47,7 @@ function listener(details){
         //also has a authorInfos.uniqueId (ex. qzim) to be safe
         items.forEach(item => {
             const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
+            const {musicId, musicName} = item.musicInfos;
             const obj = {
                 id, 
                 text, 
@@ -54,7 +55,10 @@ function listener(details){
                 likes: diggCount,
                 shares: shareCount,
                 comments: commentCount,
-                vidurl: item.itemInfos.video.urls[0]
+                vidurl: item.itemInfos.video.urls[0],
+                musicId,
+                musicName,
+                musicurl: item.musicInfos.playUrl[0]
             };
             map[user][id] = obj;
         });
