@@ -1,4 +1,4 @@
-const data = {};
+const tiktokStats = {};
 let running = false;
 
 //find the tiktok tab and send it a message
@@ -12,7 +12,7 @@ function sendMessageToTab(msg){
 }
 
 function saveToFile(){
-    const blob = new Blob([JSON.stringify(data)]);
+    const blob = new Blob([JSON.stringify(tiktokStats)]);
     browser.downloads.download({
         url: URL.createObjectURL(blob),
         saveAs: true,
@@ -21,6 +21,9 @@ function saveToFile(){
 }
 
 function listener(details){
+    if(!running)
+        return;
+
     const filter = browser.webRequest.filterResponseData(details.requestId);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
@@ -44,13 +47,13 @@ function listener(details){
         const items = obj.body.itemListData;
         const user = items[0].authorInfos.uniqueId;
 
-        if(!data[user])
-            data[user] = {};
+        if(!tiktokStats.hasOwnProperty(user))
+            tiktokStats[user] = {};
 
         items.forEach(item => {
             const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
             const {musicId, musicName} = item.musicInfos;
-            data[user][id] = {
+            tiktokStats[user][id] = {
                 text,
                 time: createTime,
                 likes: diggCount,
@@ -74,14 +77,14 @@ browser.runtime.onMessage.addListener(message => {
 //browser.browserAction.onClicked.addListener(() => {
     console.log(message);
     if(!running){
-        browser.webRequest.onBeforeRequest.addListener(
+        /*browser.webRequest.onBeforeRequest.addListener(
           listener,
           {urls: ["*://*.tiktok.com/share*"]},
           ["blocking"]
-        );
+        );*/
     }
     else{
-        browser.webRequest.onBeforeRequest.removeListener(listener);
+        //browser.webRequest.onBeforeRequest.removeListener(listener);
         saveToFile();
     }
     running = !running;
