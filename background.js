@@ -46,12 +46,20 @@ function listener(details){
         //comment 
         //also has a authorInfos.uniqueId (ex. qzim) to be safe
         items.forEach(item => {
-            let tempobject = item.itemInfos.text + ': ' + item.itemInfos.diggCount;
-            //this will overwrite, but that's good as we prevent duplicates
-            map[user][item.itemInfos.id] = tempobject;
+            const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
+            const obj = {
+                id, 
+                text, 
+                time: createTime,
+                likes: diggCount,
+                shares: shareCount,
+                comments: commentCount,
+                vidurl: item.itemInfos.video.urls[0]
+            };
+            map[user][id] = obj;
         });
         if(!(obj.body.hasMore)){
-            const blob = new Blob([JSON.stringify(map)]);//, {type: 'application/json'});
+            const blob = new Blob([JSON.stringify(map)]);
             browser.downloads.download({
                 url: URL.createObjectURL(blob),
                 saveAs: true,
