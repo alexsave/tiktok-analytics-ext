@@ -31,8 +31,9 @@ function listener(details){
         const obj = JSON.parse(data);
         //console.log(obj.body);
 
+        //don't send it immediately because it may still be loading
         if(obj.body.hasMore)
-            sendMessageToTab('scroll');
+            setTimeout(() => sendMessageToTab('scroll'), 1000);
 
 
         const items = obj.body.itemListData;
