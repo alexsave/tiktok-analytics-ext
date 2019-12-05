@@ -49,7 +49,8 @@ function listener(details){
                 //this will overwrite, but that's good as we prevent duplicates
                 map[user][item.itemInfos.id] = tempobject;
                 });
-        console.log(map);
+        if(!(obj.body.hasMore))
+            console.log(map);
     }
 
     return {};

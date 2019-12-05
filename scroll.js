@@ -1,6 +1,6 @@
 browser.runtime.onMessage.addListener(request => {
-    if(request.msg === 'scroll')
-        console.log(request.msg);
+    if(request.msg === 'scroll'){
+        window.scrollTo(0, document.body.scrollHeight);
+    }
     return Promise.resolve({});
 });
-//window.scrollTo(0, document.body.scrollHeight)
