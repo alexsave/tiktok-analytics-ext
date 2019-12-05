@@ -66,8 +66,10 @@ function listener(details){
             };
         });
 
-        if(!(obj.body.hasMore))
+        if(!(obj.body.hasMore)){
             saveToFile();
+            //running = false;
+        }
     };
 
     return {};
