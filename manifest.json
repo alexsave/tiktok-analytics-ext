@@ -1,16 +1,15 @@
 {
 
-  "description": "Altering HTTP responses",
+  "description": "TikTok Analyzer",
   "manifest_version": 2,
-  "name": "http-response-filter",
+  "name": "tiktok-addon",
   "version": "1.0",
-  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/http-response",
   "icons": {
     "48": "pen.svg"
   },
 
   "permissions": [
-    "webRequest", "webRequestBlocking", "https://example.com/*"
+    "webRequest", "webRequestBlocking", "*://*.tiktok.com/*"
   ],
 
   "background": {

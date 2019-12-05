@@ -7,7 +7,8 @@ function listener(details) {
     let str = decoder.decode(event.data, {stream: true});
     // Just change any instance of Example in the HTTP response
     // to WebExtension Example.
-    str = str.replace(/Example/g, 'WebExtension Example');
+    str = str.replace(/samuploads/g, 'It works');
+    console.log('fuck');
     filter.write(encoder.encode(str));
     filter.disconnect();
   }
@@ -17,6 +18,7 @@ function listener(details) {
 
 browser.webRequest.onBeforeRequest.addListener(
   listener,
-  {urls: ["https://example.com/*"], types: ["main_frame"]},
+  {urls: ["*://*.tiktok.com/*"]},
   ["blocking"]
 );
+
