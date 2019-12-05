@@ -46,10 +46,9 @@ function listener(details){
         //comment 
         //also has a authorInfos.uniqueId (ex. qzim) to be safe
         items.forEach(item => {
-            const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
+            const {text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
             const {musicId, musicName} = item.musicInfos;
             const obj = {
-                id, 
                 text, 
                 time: createTime,
                 likes: diggCount,
