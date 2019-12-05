@@ -1,15 +1,17 @@
 const tiktokStats = {};
 let running = false;
 let username = '';
+let tiktokTab = -1;
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
-    browser.tabs.query({url: `*://*.tiktok.com/@${username}*`})
+    browser.tabs.sendMessage(tiktokTab, {msg});
+    /*browser.tabs.query({url: `*://*.tiktok.com/@${username}*`})
       .then(tabs =>
         tabs.forEach(tab =>
           browser.tabs.sendMessage(tab.id, {msg})
         )
-      );
+      );*/
 }
 
 function saveToFile(){
@@ -71,6 +73,7 @@ function listener(details){
             browser.webRequest.onBeforeRequest.removeListener(listener);
             saveToFile();
             running = false;
+            browser.tabs.remove(tiktokTab);
         }
     };
 
@@ -91,7 +94,8 @@ browser.runtime.onMessage.addListener(message => {
         browser.tabs.create({
             active: true,
             url: `https://www.tiktok.com/@${username}`
-        });
+        })
+          .then(tab => tiktokTab = tab.id);
 
 
     }
