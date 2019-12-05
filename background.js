@@ -33,7 +33,7 @@ function listener(details){
 
         //don't send it immediately because it may still be loading
         if(obj.body.hasMore)
-            setTimeout(() => sendMessageToTab('scroll'), 1000);
+            setTimeout(() => sendMessageToTab('scroll'), 500);
 
 
         const items = obj.body.itemListData;
@@ -46,12 +46,14 @@ function listener(details){
         //comment 
         //also has a authorInfos.uniqueId (ex. qzim) to be safe
         items.forEach(item => {
-                let tempobject = item.itemInfos.text + ': ' + item.itemInfos.diggCount;
-                //this will overwrite, but that's good as we prevent duplicates
-                map[user][item.itemInfos.id] = tempobject;
-                });
-        if(!(obj.body.hasMore))
-            console.log(map);
+            let tempobject = item.itemInfos.text + ': ' + item.itemInfos.diggCount;
+            //this will overwrite, but that's good as we prevent duplicates
+            map[user][item.itemInfos.id] = tempobject;
+        });
+        if(!(obj.body.hasMore)){
+            const blob = new Blob([JSON.stringify(map)], {type: 'application/json'});
+            browser.downloads.download({url: URL.createObjectURL(blob)});
+        }
     }
 
     return {};
