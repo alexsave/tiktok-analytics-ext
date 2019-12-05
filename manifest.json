@@ -9,7 +9,7 @@
   },
 
   "permissions": [
-    "webRequest", "webRequestBlocking", "*://*.tiktok.com/*"
+    "webRequest", "webRequestBlocking", "*://*.tiktok.com/*", "tabs"
   ],
 
   "content_scripts": [

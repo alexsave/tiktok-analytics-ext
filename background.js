@@ -1,10 +1,13 @@
 const map = {};
 
+//find the tiktok tab and send it a message
 function sendMessageToTab(msg){
     browser.tabs.query({url: "*://*.tiktok.com/*"})
-        .then(tabs => {
-        
-        });
+        .then(tabs => 
+                tabs.forEach(tab => 
+                    browser.tabs.sendMessage(tab.id, {msg})
+                    )
+             );
 }
 
 function listener(details){
