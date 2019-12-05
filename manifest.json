@@ -5,7 +5,14 @@
   "name": "tiktok-addon",
   "version": "1.0",
   "icons": {
-    "48": "pen.svg"
+    "60": "icons/button-60.png",
+    "40": "icons/button-40.png"
+  },
+
+  "browser_action":{
+    "default_icon": "icons/button-40.png",
+    "default_title": "scraper",
+    "default_popup": "popup/choose_beast.html"
   },
 
   "permissions": [
