@@ -51,8 +51,12 @@ function listener(details){
             map[user][item.itemInfos.id] = tempobject;
         });
         if(!(obj.body.hasMore)){
-            const blob = new Blob([JSON.stringify(map)], {type: 'application/json'});
-            browser.downloads.download({url: URL.createObjectURL(blob)});
+            const blob = new Blob([JSON.stringify(map)]);//, {type: 'application/json'});
+            browser.downloads.download({
+                url: URL.createObjectURL(blob),
+                saveAs: true,
+                filename: 'tiktok-data.json'
+            });
         }
     }
 
