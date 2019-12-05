@@ -1,9 +1,10 @@
 const tiktokStats = {};
 let running = false;
+let username = '';
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
-    browser.tabs.query({url: "*://*.tiktok.com/*"})
+    browser.tabs.query({url: `*://*.tiktok.com/@${username}*`})
       .then(tabs =>
         tabs.forEach(tab =>
           browser.tabs.sendMessage(tab.id, {msg})
@@ -67,8 +68,9 @@ function listener(details){
         });
 
         if(!(obj.body.hasMore)){
+            browser.webRequest.onBeforeRequest.removeListener(listener);
             saveToFile();
-            //running = false;
+            running = false;
         }
     };
 
@@ -76,25 +78,35 @@ function listener(details){
 }
 
 browser.runtime.onMessage.addListener(message => {
-//browser.browserAction.onClicked.addListener(() => {
-    console.log(message);
+    console.log(message.username);
+    username = message.username;
+    //return Promise.resolve({});
     if(!running){
-        /*browser.webRequest.onBeforeRequest.addListener(
+        browser.webRequest.onBeforeRequest.addListener(
           listener,
           {urls: ["*://*.tiktok.com/share*"]},
           ["blocking"]
-        );*/
+        );
+        running = true;
+        browser.tabs.create({
+            active: true,
+            url: `https://www.tiktok.com/@${username}`
+        });
+
+
     }
     else{
+        //somethings already running, just ignore it, don't do anything
         //browser.webRequest.onBeforeRequest.removeListener(listener);
-        saveToFile();
+        //saveToFile();
     }
-    running = !running;
+    return Promise.resolve({});
+    //running = !running;
 });
 
-browser.webRequest.onBeforeRequest.addListener(
+/*browser.webRequest.onBeforeRequest.addListener(
   listener,
   {urls: ["*://*.tiktok.com/share*"]},
   ["blocking"]
-);
+);*/
 

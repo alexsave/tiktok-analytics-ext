@@ -1,7 +1,6 @@
-const sendMessage = () => {
-  if (false)
-    browser.runtime.sendMessage({msg: 'start', username: input.value});
-};
+function sendMessage(){
+  browser.runtime.sendMessage({username: input.value});
+}
 
 const input = document.querySelector('input');
 input.onkeyup = e => {
