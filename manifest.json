@@ -1,8 +1,8 @@
 {
 
-  "description": "TikTok Scraper",
+  "description": "TikTok Analytics",
   "manifest_version": 2,
-  "name": "tiktok-addon",
+  "name": "tiktok-analytics-ext",
   "version": "1.0",
   "icons": {
     "60": "icons/button-60.png",
@@ -11,7 +11,7 @@
 
   "browser_action":{
     "default_icon": "icons/button-40.png",
-    "default_title": "TikTok Scraper",
+    "default_title": "TikTok Analytics",
     "default_popup": "popup/popup.html"
   },
 
