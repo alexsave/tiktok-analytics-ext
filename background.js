@@ -77,9 +77,6 @@ function listener(details){
         //finish scraping
         if(!(obj.body.hasMore)){
             stopListener();
-            //running = false;
-            //browser.webRequest.onBeforeRequest.removeListener(listener);
-            //browser.tabs.remove(tiktokTab);
             saveToFile();
         }
     };
@@ -99,12 +96,8 @@ browser.runtime.onMessage.addListener(message => {
 
         //if we don't get a reponse that we need in 5s, the page must not work
         setTimeout(() => {
-            if(!receivedResponse){
+            if(!receivedResponse)
                 stopListener();
-                //running = false;
-                //browser.webRequest.onBeforeRequest.removeListener(listener);
-                //browser.tabs.remove(tiktokTab);
-            }
         }, 5000);
     
         browser.tabs.create({
