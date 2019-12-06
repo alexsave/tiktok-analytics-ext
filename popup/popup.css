@@ -16,8 +16,9 @@ body {
 }
 
 input {
-  width: 90%;
-  padding: 0;
+  width: 92%;
+  padding: 5px;
+  border: 2px solid #888;
 }
 
 p {
@@ -27,6 +28,9 @@ p {
 
 button {
   width: 100%;
-  margin: 3% auto;
   cursor: pointer;
+  border: 2px solid #888;
+  background: black;
+  color: white;
+  padding: 5px;
 }
