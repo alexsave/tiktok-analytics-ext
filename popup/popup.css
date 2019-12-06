@@ -11,6 +11,10 @@ body {
   justify-content: space-between;
 }
 
+#popup-content > *  {
+  font-family: "sans-serif";
+}
+
 input {
   width: 90%;
   padding: 0;
