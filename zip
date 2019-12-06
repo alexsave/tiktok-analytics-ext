@@ -1,0 +1,2 @@
+#!/bin/bash
+zip -r -FS ../firefox-tiktok-analytics.zip * --exclude *.git* zip README.md
