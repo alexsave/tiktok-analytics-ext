@@ -18,7 +18,6 @@ body {
 input {
   width: 82%;
   padding: 5px;
-  border-right: 2px solid darkgray;
   border: 0;
 }
 
@@ -30,12 +29,11 @@ input {
 #input-container {
   display: flex;
   align-items: center;
-  border: 2px solid darkgray;
+  border: 2px solid white;
   background: white;
 }
 
 #at-symbol {
-  color: black;
   padding: 2px;
   border-right: 1px solid lightgray;
   margin: 0;
