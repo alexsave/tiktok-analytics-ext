@@ -1,6 +1,16 @@
 const tiktokStats = {};
 let running = false;
 let tiktokTab = -1;
+let receivedResponse = false;
+
+function stopListener(){
+    if(tiktokTab !== -1)
+        browser.tabs.remove(tiktokTab);
+    running = false;
+    receivedResponse = false;
+    tiktokTab = -1;
+    browser.webRequest.onBeforeRequest.removeListener(listener);
+}
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
@@ -17,9 +27,11 @@ function saveToFile(){
 }
 
 function listener(details){
+    //sanity check
     if(!running)
         return;
 
+    receivedResponse = true;
     const filter = browser.webRequest.filterResponseData(details.requestId);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
@@ -64,10 +76,11 @@ function listener(details){
 
         //finish scraping
         if(!(obj.body.hasMore)){
-            browser.webRequest.onBeforeRequest.removeListener(listener);
+            stopListener();
+            //running = false;
+            //browser.webRequest.onBeforeRequest.removeListener(listener);
+            //browser.tabs.remove(tiktokTab);
             saveToFile();
-            running = false;
-            browser.tabs.remove(tiktokTab);
         }
     };
 
@@ -77,11 +90,23 @@ function listener(details){
 browser.runtime.onMessage.addListener(message => {
     if(!running){
         running = true;
+        //receivedResponse = false;
         browser.webRequest.onBeforeRequest.addListener(
           listener,
           {urls: ["*://*.tiktok.com/share*"]},
           ["blocking"]
         );
+
+        //if we don't get a reponse that we need in 5s, the page must not work
+        setTimeout(() => {
+            if(!receivedResponse){
+                stopListener();
+                //running = false;
+                //browser.webRequest.onBeforeRequest.removeListener(listener);
+                //browser.tabs.remove(tiktokTab);
+            }
+        }, 5000);
+    
         browser.tabs.create({
             active: true,
             url: `https://www.tiktok.com/@${message.username}`
