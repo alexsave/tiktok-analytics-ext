@@ -99,11 +99,15 @@ browser.runtime.onMessage.addListener(message => {
             if(!receivedResponse)
                 stopListener();
         }, 5000);
-    
-        browser.tabs.create({
-            active: true,
-            url: `https://www.tiktok.com/@${message.username}`
-        }).then(tab => tiktokTab = tab.id);
+
+        if(message.reuseTab)
+            browser.tabs.reload(/*{bypassCache:true}*/);
+        else{
+            browser.tabs.create({
+                active: true,
+                url: `https://www.tiktok.com/@${message.username}`
+            }).then(tab => tiktokTab = tab.id);
+        }
     }
     return Promise.resolve({});
 });
