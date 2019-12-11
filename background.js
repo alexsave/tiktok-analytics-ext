@@ -98,8 +98,11 @@ browser.runtime.onMessage.addListener(message => {
 
         //if we don't get a reponse that we need in 5s, the page must not work
         setTimeout(() => {
-            if(!receivedResponse)
+            if(!receivedResponse){
+                //we'll save it anyways as empty
+                tiktokStats[message.username] = {};
                 stopListener();
+            }
         }, 5000);
 
         if(message.reuseTab)
