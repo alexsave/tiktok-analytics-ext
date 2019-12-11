@@ -61,8 +61,10 @@ function listener(details){
         items.forEach(item => {
             const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
             const {musicId, musicName} = item.musicInfos;
+            //Get rid of this character ’ !== '
+            const cleanText = text.replace('’', '\'');
             tiktokStats[user][id] = {
-                text,
+                cleanText,
                 time: createTime,
                 likes: diggCount,
                 shares: shareCount,
