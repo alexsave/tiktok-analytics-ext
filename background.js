@@ -64,7 +64,7 @@ function listener(details){
             //Get rid of this character ’ !== '
             const cleanText = text.replace('’', '\'');
             tiktokStats[user][id] = {
-                cleanText,
+                text: cleanText,
                 time: createTime,
                 likes: diggCount,
                 shares: shareCount,
