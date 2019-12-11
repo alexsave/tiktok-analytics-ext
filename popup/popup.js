@@ -5,6 +5,7 @@ function sendMessage(){
 }
 
 const input = document.querySelector('input');
+input.focus();
 input.onkeyup = e => {
     if(e.keyCode === 13)
         sendMessage();
