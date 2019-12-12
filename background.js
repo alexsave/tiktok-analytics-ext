@@ -53,6 +53,14 @@ function listener(details){
             setTimeout(() => sendMessageToTab('scroll'), 500);
 
         const items = obj.body.itemListData;
+
+        //will otherwise break the extension on users with no videos
+        if(items.length === 0){
+            stopListener();
+            saveToFile();
+            return {};
+        }
+
         const user = items[0].authorInfos.uniqueId;
 
         if(!tiktokStats.hasOwnProperty(user))
