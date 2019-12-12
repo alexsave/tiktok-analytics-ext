@@ -111,7 +111,7 @@ browser.runtime.onMessage.addListener(message => {
                 tiktokStats[message.username] = {};
                 stopListener();
             }
-        }, 5000);
+        }, 9000);
 
         if(message.reuseTab)
             browser.tabs.reload(/*{bypassCache:true}*/);
