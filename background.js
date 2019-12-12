@@ -90,11 +90,19 @@ chrome.runtime.onMessage.addListener(message => {
     if(!running){
         running = true;
         //receivedResponse = false;
-        chrome.webRequest.onBeforeRequest.addListener(
+        chrome.devtools.network.onRequestFinished.addListener(request => {
+            //console.log(request.response);
+            request.getContent(body => {
+                alert(body);
+                console.log(body)
+            });
+            
+        });
+        /*chrome.webRequest.onBeforeRequest.addListener(
           listener,
           {urls: ["*://*.tiktok.com/share*"]},
           ["blocking"]
-        );
+        );*/
 
         //if we don't get a reponse that we need in 5s, the page must not work
         setTimeout(() => {
