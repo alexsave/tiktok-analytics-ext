@@ -1,6 +1,6 @@
 let tabU = '';
 function sendMessage(){
-    browser.runtime.sendMessage({reuseTab: tabU === input.value, username: input.value});
+    chrome.runtime.sendMessage({reuseTab: tabU === input.value, username: input.value});
     window.close();
 }
 
@@ -21,5 +21,4 @@ function analyzeTabs(tabs){
     }
 };
 //see if we're already on a tiktok user page that they probably want to scrape
-browser.tabs.query({url: '*://*.tiktok.com/@*', currentWindow: true, active: true})
-.then(analyzeTabs);
+chrome.tabs.query({url: '*://*.tiktok.com/@*', currentWindow: true, active: true}, analyzeTabs);

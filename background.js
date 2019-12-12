@@ -5,21 +5,21 @@ let receivedResponse = false;
 
 function stopListener(){
     if(tiktokTab !== -1)
-        browser.tabs.remove(tiktokTab);
+        chrome.tabs.remove(tiktokTab);
     running = false;
     receivedResponse = false;
     tiktokTab = -1;
-    browser.webRequest.onBeforeRequest.removeListener(listener);
+    chrome.webRequest.onBeforeRequest.removeListener(listener);
 }
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
-    browser.tabs.sendMessage(tiktokTab, {msg});
+    chrome.tabs.sendMessage(tiktokTab, {msg});
 }
 
 function saveToFile(){
     const blob = new Blob([JSON.stringify(tiktokStats)]);
-    browser.downloads.download({
+    chrome.downloads.download({
         url: URL.createObjectURL(blob),
         saveAs: true,
         filename: 'tiktok-data.json'
@@ -32,7 +32,7 @@ function listener(details){
         return;
 
     receivedResponse = true;
-    const filter = browser.webRequest.filterResponseData(details.requestId);
+    const filter = chrome.webRequest.filterResponseData(details.requestId);
     const decoder = new TextDecoder("utf-8");
     const encoder = new TextEncoder();
     let data = "";
@@ -86,11 +86,11 @@ function listener(details){
     return {};
 }
 
-browser.runtime.onMessage.addListener(message => {
+chrome.runtime.onMessage.addListener(message => {
     if(!running){
         running = true;
         //receivedResponse = false;
-        browser.webRequest.onBeforeRequest.addListener(
+        chrome.webRequest.onBeforeRequest.addListener(
           listener,
           {urls: ["*://*.tiktok.com/share*"]},
           ["blocking"]
@@ -106,12 +106,12 @@ browser.runtime.onMessage.addListener(message => {
         }, 5000);
 
         if(message.reuseTab)
-            browser.tabs.reload(/*{bypassCache:true}*/);
+            chrome.tabs.reload(/*{bypassCache:true}*/);
         else{
-            browser.tabs.create({
+            chrome.tabs.create({
                 active: true,
                 url: `https://www.tiktok.com/@${message.username}`
-            }).then(tab => tiktokTab = tab.id);
+            }, tab => tiktokTab = tab.id);
         }
     }
     return Promise.resolve({});
