@@ -28,12 +28,6 @@
 
   "background": {
     "scripts": ["background.js"]
-  },
-
-  "applications": {
-    "gecko": {
-      "strict_min_version": "57.0a1"
-    }
   }
 
 }
