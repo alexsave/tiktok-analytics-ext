@@ -132,12 +132,13 @@ browser.runtime.onMessage.addListener(message => {
     }
     //return of user specific data
     else if(message.type === 'userdata'){
-        console.log(message.userData);
-        const user = message.userData.username;
-        //idk how this would be possible but just in case
-        if(!tiktokStats.hasOwnProperty(user))
-            tiktokStats[user] = {};
-        tiktokStats[user] = {...tiktokStats[user], ...message.userData};
+        if(message.userData.username){
+            const user = message.userData.username;
+            //idk how this would be possible but just in case
+            if(!tiktokStats.hasOwnProperty(user))
+                tiktokStats[user] = {};
+            tiktokStats[user] = {...tiktokStats[user], ...message.userData};
+        }
         //we're gonna do this here because the userdata message is the last thing that will happen
         stopListener();
         saveToFile();
