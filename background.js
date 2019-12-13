@@ -14,7 +14,11 @@ function stopListener(){
 
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
-    browser.tabs.sendMessage(tiktokTab, {msg});
+    if(tiktokTab !== -1)
+        browser.tabs.sendMessage(tiktokTab, {msg});
+    else
+        browser.tabs.query({ currentWindow: true, active: true })
+            .then(tabs => browser.tabs.sendMessage(tabs[0].id, {msg}));
 }
 
 function saveToFile(){
