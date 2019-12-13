@@ -7,10 +7,13 @@ browser.runtime.onMessage.addListener(request => {
     else if(request.msg === 'userdata'){
         console.log('window loaded');
         const elem = document.querySelector('#__NEXT_DATA__');
+        if(elem === null)
+            browser.runtime.sendMessage({userData:{}, type: 'userdata'});
         const raw = elem.innerHTML;
         const obj = JSON.parse(raw);
         const data = obj.props.pageProps.userData;
-        console.log(data);
+        if(data === undefined)
+            browser.runtime.sendMessage({userData:{}, type: 'userdata'});
         const userData = {
             username: data.uniqueId,
             shares: data.digg,
