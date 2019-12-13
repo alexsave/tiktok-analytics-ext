@@ -136,7 +136,7 @@ browser.runtime.onMessage.addListener(message => {
             const user = message.userData.username;
             //idk how this would be possible but just in case
             if(!tiktokStats.hasOwnProperty(user))
-                tiktokStats[user] = {};
+                tiktokStats[user] = {tiktoks:{}};
             tiktokStats[user] = {...tiktokStats[user], ...message.userData};
         }
         //we're gonna do this here because the userdata message is the last thing that will happen
