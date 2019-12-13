@@ -5,7 +5,6 @@ browser.runtime.onMessage.addListener(request => {
     //when the window loads, we'll have some data available
     //this does work wiht private account btw
     else if(request.msg === 'userdata'){
-        console.log('window loaded');
         const elem = document.querySelector('#__NEXT_DATA__');
         if(elem === null)
             browser.runtime.sendMessage({userData:{}, type: 'userdata'});
@@ -19,7 +18,7 @@ browser.runtime.onMessage.addListener(request => {
             shares: data.digg,
             followers: data.fans,
             following: data.following,
-            likes: data.hearts,
+            likes: data.heart,
             bio: data.signature,
             verified: data.verified,
             videos: data.video
