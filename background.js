@@ -65,14 +65,14 @@ function listener(details){
         const user = items[0].authorInfos.uniqueId;
 
         if(!tiktokStats.hasOwnProperty(user))
-            tiktokStats[user] = {};
+            tiktokStats[user] = {tiktoks:{}};
 
         items.forEach(item => {
             const {id, text, createTime, diggCount, shareCount, commentCount} = item.itemInfos;
             const {musicId, musicName} = item.musicInfos;
             //Get rid of this character ’ !== '
             const cleanText = text.replace('’', '\'');
-            tiktokStats[user][id] = {
+            tiktokStats[user]['tiktoks'][id] = {
                 text: cleanText,
                 time: createTime,
                 likes: diggCount,
@@ -133,6 +133,7 @@ browser.runtime.onMessage.addListener(message => {
     else if(message.type === 'userdata'){
         console.log(message.userData);
         const user = message.userData.username;
+        //idk how this would be possible but just in case
         if(!tiktokStats.hasOwnProperty(user))
             tiktokStats[user] = {};
         tiktokStats[user] = {...tiktokStats[user], ...message.userData};
