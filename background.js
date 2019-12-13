@@ -118,7 +118,8 @@ browser.runtime.onMessage.addListener(message => {
             setTimeout(() => {
                 if(!receivedResponse){
                     //we'll save it anyways as empty
-                    tiktokStats[message.username] = {tiktoks:{}};
+                    if(!tiktokStats.hasOwnProperty(message.username))
+                        tiktokStats[message.username] = {tiktoks:{}};
                     sendMessageToTab('userdata');
                     //stopListener();
                 }
