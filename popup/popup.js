@@ -1,6 +1,6 @@
 let tabU = '';
 function sendMessage(){
-    browser.runtime.sendMessage({reuseTab: tabU === input.value, username: input.value});
+    browser.runtime.sendMessage({type: 'scrape', reuseTab: tabU === input.value, username: input.value});
     window.close();
 }
 

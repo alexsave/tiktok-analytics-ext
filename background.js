@@ -56,8 +56,9 @@ function listener(details){
 
         //will otherwise break the extension on users with no videos
         if(items.length === 0){
-            stopListener();
-            saveToFile();
+            sendMessageToTab('userdata');
+            /*stopListener();
+            saveToFile();*/
             return {};
         }
 
@@ -86,8 +87,10 @@ function listener(details){
 
         //finish scraping
         if(!(obj.body.hasMore)){
-            stopListener();
-            saveToFile();
+
+            sendMessageToTab('userdata');
+            /*stopListener();
+            saveToFile();*/
         }
     };
 
@@ -95,32 +98,47 @@ function listener(details){
 }
 
 browser.runtime.onMessage.addListener(message => {
-    if(!running){
-        running = true;
-        //receivedResponse = false;
-        browser.webRequest.onBeforeRequest.addListener(
-          listener,
-          {urls: ["*://*.tiktok.com/share*"]},
-          ["blocking"]
-        );
+    //request to scrape a user
+    if(message.type === 'scrape'){
 
-        //if we don't get a reponse that we need in 5s, the page must not work
-        setTimeout(() => {
-            if(!receivedResponse){
-                //we'll save it anyways as empty
-                tiktokStats[message.username] = {};
-                stopListener();
+        if(!running){
+            running = true;
+            //receivedResponse = false;
+            browser.webRequest.onBeforeRequest.addListener(
+              listener,
+              {urls: ["*://*.tiktok.com/share*"]},
+              ["blocking"]
+            );
+
+            //if we don't get a reponse that we need in 5s, the page must not work
+            setTimeout(() => {
+                if(!receivedResponse){
+                    //we'll save it anyways as empty
+                    tiktokStats[message.username] = {};
+                    stopListener();
+                }
+            }, 9000);
+
+            if(message.reuseTab)
+                browser.tabs.reload(/*{bypassCache:true}*/);
+            else{
+                browser.tabs.create({
+                    active: true,
+                    url: `https://www.tiktok.com/@${message.username}`
+                }).then(tab => tiktokTab = tab.id);
             }
-        }, 9000);
-
-        if(message.reuseTab)
-            browser.tabs.reload(/*{bypassCache:true}*/);
-        else{
-            browser.tabs.create({
-                active: true,
-                url: `https://www.tiktok.com/@${message.username}`
-            }).then(tab => tiktokTab = tab.id);
         }
+    }
+    //return of user specific data
+    else if(message.type === 'userdata'){
+        console.log(message.userData);
+        const user = message.userData.username;
+        if(!tiktokStats.hasOwnProperty(user))
+            tiktokStats[user] = {};
+        tiktokStats[user] = {...tiktokStats[user], ...message.userData};
+        //we're gonna do this here because the userdata message is the last thing that will happen
+        stopListener();
+        saveToFile();
     }
     return Promise.resolve({});
 });
