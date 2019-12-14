@@ -28,3 +28,4 @@ browser.runtime.onMessage.addListener(request => {
     }
     return Promise.resolve({});
 });
+browser.runtime.sendMessage({type: 'tabready'});
