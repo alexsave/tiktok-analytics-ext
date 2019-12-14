@@ -8,9 +8,7 @@ let messagePending = false;
 
 function endScrape(){
     stopListener();
-    console.log(scrapelist);
     const nextUser = scrapelist.shift();
-    console.log(scrapelist);
     if(nextUser)
         scrape(nextUser, false);
     else
@@ -31,7 +29,6 @@ function stopListener(){
 //find the tiktok tab and send it a message
 function sendMessageToTab(msg){
     if(tabready){
-        console.log('message sent fucker ' + msg);
         if(tiktokTab !== -1)
             browser.tabs.sendMessage(tiktokTab, {msg});
         else
@@ -75,22 +72,14 @@ function listener(details){
         const obj = JSON.parse(data);
 
         //don't send it immediately because it may still be loading
-        if(obj.body.hasMore){
-            //console.log('tabready ' + tabready);
-            //if(tabready)
-                setTimeout(() => sendMessageToTab('scroll'), 500);
-            //else
-                //messagePending
-
-        }
+        if(obj.body.hasMore)
+            setTimeout(() => sendMessageToTab('scroll'), 500);
 
         const items = obj.body.itemListData;
 
         //will otherwise break the extension on users with no videos
         if(items.length === 0){
             sendMessageToTab('userdata');
-            /*stopListener();
-            saveToFile();*/
             return {};
         }
 
@@ -118,12 +107,8 @@ function listener(details){
         });
 
         //finish scraping
-        if(!(obj.body.hasMore)){
-
+        if(!(obj.body.hasMore))
             sendMessageToTab('userdata');
-            /*stopListener();
-            saveToFile();*/
-        }
     };
 
     return {};
@@ -146,26 +131,23 @@ function scrape(username, reuseTab){
                 if(!tiktokStats.hasOwnProperty(username))
                     tiktokStats[username] = {tiktoks:{}};
                 sendMessageToTab('userdata');
-                //stopListener();
             }
         }, 9000);
 
         if(reuseTab)
-            browser.tabs.reload(/*{bypassCache:true}*/);
+            browser.tabs.reload();
         else{
             browser.tabs.create({
                 active: true,
                 url: `https://www.tiktok.com/@${username}`
-            }).then(tab => {tiktokTab = tab.id; console.log('tab id got')});
+            }).then(tab => tiktokTab = tab.id);
         }
     }
-
 }
 
 browser.runtime.onMessage.addListener(message => {
     //request to scrape a user
     if(message.type === 'scrape'){
-        //stopListener();
         scrapelist = message.username.split(' ');
 
         scrape(scrapelist.shift(), message.reuseTab);
@@ -189,7 +171,6 @@ browser.runtime.onMessage.addListener(message => {
         //saveToFile();
     }
     else if(message.type === 'tabready'){
-        console.log('received tab ready, pending message: ' + messagePending);
         tabready = true;
         if(messagePending)
             sendMessageToTab(messagePending);
