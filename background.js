@@ -99,7 +99,6 @@ function listener(details){
                 likes: diggCount,
                 shares: shareCount,
                 comments: commentCount,
-                vidurl: item.itemInfos.video.urls[0],
                 musicId,
                 musicName,
                 musicurl: item.musicInfos.playUrl[0]
