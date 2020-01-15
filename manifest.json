@@ -3,7 +3,7 @@
   "description": "TikTok Analytics",
   "manifest_version": 2,
   "name": "tiktok-analytics-ext",
-  "version": "1.2",
+  "version": "1.3",
   "icons": {
     "48": "icons/icon-48.png",
     "96": "icons/icon-96.png"
